@@ -22,6 +22,12 @@ terraform {
       version = "~> 2.0"
     }
   }
+
+  backend "gcs" {
+    bucket = "terraform-state-bucket-261296"
+    prefix = "terraform/state"
+
+  }
 }
 
 provider "kubernetes" {
