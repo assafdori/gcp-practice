@@ -41,3 +41,31 @@ resource "google_container_cluster" "gke" {
   }
 
 }
+
+# This service account will be used by the GKE cluster to access Google Cloud resources
+resource "google_service_account" "bucket-reader" {
+  account_id   = "${local.prefix}-bucket-reader"
+  display_name = "Bucket Reader Service Account"
+}
+
+resource "kubernetes_service_account" "bucket-reader" {
+  metadata {
+    name      = "bucket-reader"
+    namespace = "default"
+    annotations = {
+      "iam.gke.io/gcp-service-account" = google_service_account.bucket-reader.email
+    }
+  }
+}
+
+resource "google_project_iam_member" "bucket-reader-storage-object-viewer" {
+  project = local.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.bucket-reader.email}"
+}
+
+resource "google_service_account_iam_binding" "bucket-reader-binding" {
+  service_account_id = google_service_account.bucket-reader.name
+  role               = "roles/iam.workloadIdentityUser"
+  members            = ["serviceAccount:${local.project_id}.svc.id.goog[default/bucket-reader]"]
+}

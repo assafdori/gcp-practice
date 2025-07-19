@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gcloud-cli
+  namespace: default
+spec:
+  serviceAccountName: bucket-reader
+  containers:
+    - name: gcloud-cli
+      image: google/cloud-sdk:latest
+      command: ["/bin/sh", "-c", "while true; do sleep 30; done;"]
+  restartPolicy: Always

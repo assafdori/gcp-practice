@@ -23,5 +23,5 @@ resource "helm_release" "ingress_nginx" {
       }
     })
   ]
-  depends_on = [google_container_cluster.gke, kubernetes_namespace.ingress_nginx]
+  depends_on = [kubernetes_namespace.ingress_nginx]
 }
