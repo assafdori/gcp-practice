@@ -2,7 +2,7 @@ resource "kubernetes_namespace" "ingress_nginx" {
   metadata {
     name = "ingress-nginx"
   }
-  depends_on = [google_container_cluster.gke]
+  # depends_on = [google_container_cluster.gke]
 }
 
 resource "helm_release" "ingress_nginx" {
