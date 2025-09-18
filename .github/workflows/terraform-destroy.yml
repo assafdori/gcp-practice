@@ -1,14 +1,18 @@
 ---
-name: Terraform Deploy to GCP
+
+name: Terraform Destroy on GCP
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'destroy' to confirm"
+        required: true
+        default: "cancel"
 
 jobs:
-  Terraform-Deploy:
+  Terraform-Destroy:
+    if: github.event.inputs.confirm == 'destroy'
     runs-on: ubuntu-latest
 
     env:
@@ -36,19 +40,10 @@ jobs:
         run: terraform init
         working-directory: ./terraform
 
-      - name: Terraform Format
-        run: terraform fmt -check -recursive
+      - name: Terraform Plan Destroy
+        run: terraform plan -destroy -input=false -out=tfplan
         working-directory: ./terraform
 
-      - name: Terraform Validate
-        run: terraform validate
-        working-directory: ./terraform
-
-      - name: Terraform Plan
-        run: terraform plan -input=false -out=tfplan
-        working-directory: ./terraform
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+      - name: Terraform Destroy
         run: terraform apply -input=false -auto-approve tfplan
         working-directory: ./terraform
