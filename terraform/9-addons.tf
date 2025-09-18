@@ -23,28 +23,28 @@ resource "helm_release" "argocd" {
   }
 }
 
-resource "kubernetes_manifest" "argocd_root_app" {
-  manifest = yamldecode(<<EOT
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: root-app
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: "https://github.com/assafdori/gcp-practice.git"
-    targetRevision: main
-    path: apps 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-EOT
-  )
-  depends_on = [helm_release.argocd]
-}
-
+# resource "kubernetes_manifest" "argocd_root_app" {
+#   manifest = yamldecode(<<EOT
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: root-app
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: "https://github.com/assafdori/gcp-practice.git"
+#     targetRevision: main
+#     path: apps 
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: argocd
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+# EOT
+#   )
+#   depends_on = [helm_release.argocd]
+# }
+#
